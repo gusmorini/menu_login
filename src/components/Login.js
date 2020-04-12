@@ -34,8 +34,6 @@ export default function Login() {
    */
 
   function getItems() {
-    console.log("getitems");
-
     if (!!localStorage.getItem("@bemdboa")) {
       const { name, email, picture, first } = JSON.parse(
         localStorage.getItem("@bemdboa")
@@ -131,7 +129,7 @@ export default function Login() {
 
   function handleLogout() {
     setLogged(false);
-    localStorage.clear();
+    localStorage.removeItem("@bemdboa");
   }
 
   /** define o conteúdo do box de login */
