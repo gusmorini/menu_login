@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import FacebookLogin from "react-facebook-login";
 import { GoogleLogin } from "react-google-login";
 
@@ -12,9 +12,9 @@ export default function Login() {
   const [open, setOpen] = useState(false);
   const [logged, setLogged] = useState(false);
   const [name, setName] = useState(null);
-  const [firstName, setFirstName] = useState("entrar");
+  const [firstName, setFirstName] = useState(null);
   const [email, setEmail] = useState(null);
-  const [picture, setPicture] = useState("/default-avatar.jpg");
+  const [picture, setPicture] = useState(null);
 
   /**
    * useEffect faz o papel de
@@ -34,16 +34,20 @@ export default function Login() {
    */
 
   function getItems() {
+    console.log("getitems");
+
     if (!!localStorage.getItem("@bemdboa")) {
       const { name, email, picture, first } = JSON.parse(
         localStorage.getItem("@bemdboa")
       );
-
       setLogged(true);
       setName(name);
       setEmail(email);
       setPicture(picture);
       setFirstName(first);
+    } else if (!logged) {
+      setPicture("/default-avatar.jpg");
+      setFirstName("entrar");
     }
   }
 
@@ -127,7 +131,7 @@ export default function Login() {
 
   function handleLogout() {
     setLogged(false);
-    localStorage.removeItem("@bemdboa");
+    localStorage.clear();
   }
 
   /** define o conteúdo do box de login */
@@ -157,9 +161,7 @@ export default function Login() {
       <>
         <p>{name}</p>
         <p>{email}</p>
-        <a href="" onClick={handleLogout}>
-          sair
-        </a>
+        <strong onClick={handleLogout}>sair</strong>
       </>
     );
   }
@@ -244,10 +246,17 @@ const Box = styled.div`
   top: calc(100% + 20px);
   position: absolute;
   border-radius: 4px;
-  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.7);
-  display: ${(props) => (props.open ? "block" : "none")};
+  box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.7);
   text-align: left;
   line-height: 30px;
+
+  display: none;
+
+  ${(props) =>
+    props.open &&
+    css`
+      display: block;
+    `}
 
   &::before {
     content: "";
